@@ -19,11 +19,11 @@ ProcessarOfertas(input);
 static void ProcessarOfertas(string input)
 {
     var listaOfertas = new Dictionary<int, (double, int)>();
-
-    var linhas = input.Split("\n");
     const int inserir = 0;
     const int modificar = 1;
     const int deletar = 2;
+    
+    var linhas = input.Split("\n");
 
     for (var i = 1; i < linhas.Length; i++)
     {
@@ -33,42 +33,19 @@ static void ProcessarOfertas(string input)
         var valor = double.Parse(splitLine[2], CultureInfo.InvariantCulture);
         var quantidade = int.Parse(splitLine[3]);
 
-        // Console.WriteLine($"Pos: {posição}. Ação: {ação}, Valor: {valor.ToString("0.0", CultureInfo.InvariantCulture)}, Quantidade: {quantidade}");
+        Console.WriteLine($"Pos: {posição}. Ação: {ação}, Valor: {valor.ToString("0.0", CultureInfo.InvariantCulture)}, Quantidade: {quantidade}");
 
         if (ação == inserir)
         {
-            if (posição <= listaOfertas.Count)
-            {
-                listaOfertas[posição] = (valor, quantidade);
-            }
-            else
-            {
-                listaOfertas.Add(posição, (valor, quantidade));
-            }
+            InserirOferta(listaOfertas, posição, valor, quantidade);
         }
         else if (ação == modificar)
         {
-            if (valor > 0)
-            {
-                var copiaQuantidade = listaOfertas[posição].Item2;
-                listaOfertas[posição] = (valor, copiaQuantidade);
-            }
-            else
-            {
-                var copiaValor = listaOfertas[posição].Item1;
-                listaOfertas[posição] = (copiaValor, quantidade);
-            }
+            ModificarOferta(listaOfertas, posição, valor, quantidade);
         }
         else if (ação == deletar)
         {
-            if (posição < listaOfertas.Count)
-            {
-                listaOfertas.Remove(posição);
-            }
-            else
-            {
-                Console.WriteLine($"Erro: Posição {posição} não é válida.");
-            }
+            DeletarOferta(listaOfertas, posição);
         }
         else
         {
@@ -76,6 +53,49 @@ static void ProcessarOfertas(string input)
         }
     }
 
+    ImprimirOfertas(listaOfertas);
+}
+
+static void InserirOferta(Dictionary<int, (double, int)> listaOfertas, int posição, double valor, int quantidade)
+{
+    if (posição <= listaOfertas.Count)
+    {
+        listaOfertas[posição] = (valor, quantidade);
+    }
+    else
+    {
+        listaOfertas.Add(posição, (valor, quantidade));
+    }
+}
+
+static void ModificarOferta(Dictionary<int, (double, int)> listaOfertas, int posição, double valor, int quantidade)
+{
+    if (valor > 0)
+    {
+        var copiaQuantidade = listaOfertas[posição].Item2;
+        listaOfertas[posição] = (valor, copiaQuantidade);
+    }
+    else
+    {
+        var copiaValor = listaOfertas[posição].Item1;
+        listaOfertas[posição] = (copiaValor, quantidade);
+    }
+}
+
+static void DeletarOferta(Dictionary<int, (double, int)> listaOfertas, int posição)
+{
+    if (posição < listaOfertas.Count)
+    {
+        listaOfertas.Remove(posição);
+    }
+    else
+    {
+        Console.WriteLine($"Erro: Posição {posição} não é válida.");
+    }
+}
+
+static void ImprimirOfertas(Dictionary<int, (double, int)> listaOfertas)
+{
     foreach (var posição in listaOfertas)
         Console.WriteLine(posição.ToString());
 }
