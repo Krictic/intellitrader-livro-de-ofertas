@@ -1,24 +1,24 @@
 ﻿using System.Globalization;
 
-var input = ("12\n" +
-             "1,0,15.4,50\n" +
-             "2,0,15.5,50\n" +
-             "2,2,0,0\n" + 
-             "2,0,15.4,10\n" +
-             "3,0,15.9,30\n" +
-             "3,1,0,20\n" +
-             "4,0,16.50,200\n" +
-             "5,0,17.00,100\n" +
-             "5,0,16.59,20\n" +
-             "6,2,0,0\n" +
-             "1,2,0,0\n" +
-             "2,1,15.6,0");
+const string input = ("12\n" +
+                      "1,0,15.4,50\n" +
+                      "2,0,15.5,50\n" +
+                      "2,2,0,0\n" + 
+                      "2,0,15.4,10\n" +
+                      "3,0,15.9,30\n" +
+                      "3,1,0,20\n" +
+                      "4,0,16.50,200\n" +
+                      "5,0,17.00,100\n" +
+                      "5,0,16.59,20\n" +
+                      "6,2,0,0\n" +
+                      "1,2,0,0\n" +
+                      "2,1,15.6,0");
 
-processar_ofertas(input);
+ProcessarOfertas(input);
 
-static void processar_ofertas(string input)
+static void ProcessarOfertas(string input)
 {
-    var lista_ofertas = new Dictionary<int, (double, int)>();
+    var listaOfertas = new Dictionary<int, (double, int)>();
 
     var linhas = input.Split("\n");
     const int inserir = 0;
@@ -37,33 +37,33 @@ static void processar_ofertas(string input)
 
         if (ação == inserir)
         {
-            if (posição <= lista_ofertas.Count)
+            if (posição <= listaOfertas.Count)
             {
-                lista_ofertas[posição] = (valor, quantidade);
+                listaOfertas[posição] = (valor, quantidade);
             }
             else
             {
-                lista_ofertas.Add(posição, (valor, quantidade));
+                listaOfertas.Add(posição, (valor, quantidade));
             }
         }
         else if (ação == modificar)
         {
             if (valor > 0)
             {
-                var copiaQuantidade = lista_ofertas[posição].Item2;
-                lista_ofertas[posição] = (valor, copiaQuantidade);
+                var copiaQuantidade = listaOfertas[posição].Item2;
+                listaOfertas[posição] = (valor, copiaQuantidade);
             }
             else
             {
-                var copiaValor = lista_ofertas[posição].Item1;
-                lista_ofertas[posição] = (copiaValor, quantidade);
+                var copiaValor = listaOfertas[posição].Item1;
+                listaOfertas[posição] = (copiaValor, quantidade);
             }
         }
         else if (ação == deletar)
         {
-            if (posição < lista_ofertas.Count)
+            if (posição < listaOfertas.Count)
             {
-                lista_ofertas.Remove(posição);
+                listaOfertas.Remove(posição);
             }
             else
             {
@@ -76,6 +76,6 @@ static void processar_ofertas(string input)
         }
     }
 
-    foreach (var posição in lista_ofertas)
+    foreach (var posição in listaOfertas)
         Console.WriteLine(posição.ToString());
 }
