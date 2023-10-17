@@ -35,21 +35,20 @@ static void ProcessarOfertas(string input)
 
         Console.WriteLine($"Pos: {posição}. Ação: {ação}, Valor: {valor.ToString("0.0", CultureInfo.InvariantCulture)}, Quantidade: {quantidade}");
 
-        if (ação == inserir)
+        switch (ação)
         {
-            InserirOferta(listaOfertas, posição, valor, quantidade);
-        }
-        else if (ação == modificar)
-        {
-            ModificarOferta(listaOfertas, posição, valor, quantidade);
-        }
-        else if (ação == deletar)
-        {
-            DeletarOferta(listaOfertas, posição);
-        }
-        else
-        {
-            Console.WriteLine($"Erro: Ação {ação} não é válida.");
+            case inserir:
+                InserirOferta(listaOfertas, posição, valor, quantidade);
+                break;
+            case modificar:
+                ModificarOferta(listaOfertas, posição, valor, quantidade);
+                break;
+            case deletar:
+                DeletarOferta(listaOfertas, posição);
+                break;
+            default:
+                Console.WriteLine($"Erro: Ação {ação} não é válida.");
+                break;
         }
     }
 
