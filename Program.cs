@@ -20,23 +20,24 @@ namespace livro_de_ofertas
                                   "6,2,0,0\n" +
                                   "1,2,0,0\n" +
                                   "2,1,15.6,0");
-            var input2 = "1,0,15.4,50";
-            var input3 = "1,1,16.2,100";
-            var input4 = "1,2,0,0";
-            var input5 = ("5\n" +
-                         "1,0,15.4,50\n" +
-                         "2,0,15.4,30\n" +
-                         "3,0,15.4,20\n" +
-                         "4,0,15.4,10\n" +
-                         "5,0,15.4,5");
-            var input6 = ("3\n" +
-                         "1,0,-10.5,50\n" +
-                         "2,0,15.5,-30\n" +
-                         "3,0,-5.2,-20");
-            var input7 = ("3\n" +
-                         "1,0,15.4,50\n" +
-                         "2,0,15.5,30\n" +
-                         "3,0,16.2,20.5");
+            const string input2 = "1,0,15.4,50";
+            const string input3 = "1,1,16.2,100";
+            const string input4 = "1,2,0,0";
+            const string input5 = ("5\n" +
+                                   "1,0,15.4,50\n" +
+                                   "2,0,15.4,30\n" +
+                                   "3,0,15.4,20\n" +
+                                   "4,0,15.4,10\n" +
+                                   "5,0,15.4,5");
+            const string input6 = ("3\n" +
+                                   "1,0,-10.5,50\n" +
+                                   "2,0,15.5,-30\n" +
+                                   "3,0,-5.2,-20");
+            const string input7 = ("3\n" +
+                                   "1,0,15.4,50\n" +
+                                   "2,0,15.5,30\n" +
+                                   "3,0,16.2,20.5");
+            
             Console.WriteLine("-------------1-------------");
             ProcessarOfertas(input);
             Console.WriteLine("-------------2-------------");
@@ -51,11 +52,12 @@ namespace livro_de_ofertas
             ProcessarOfertas(input6);
             Console.WriteLine("-------------7-------------");
             ProcessarOfertas(input7);
+
         }
 
-        static void ProcessarOfertas(string input)
+        private static void ProcessarOfertas(string input)
         {
-            if (input.Length == 0)
+            if (string.IsNullOrEmpty(input))
             {
                 Console.WriteLine("Erro: Input não pode ser vazio.");
                 return;
@@ -66,14 +68,40 @@ namespace livro_de_ofertas
             const int deletar = 2;
 
             var linhas = input.Split("\n");
-
+            if (!int.TryParse(linhas[0], out var _))
+            {
+                Console.WriteLine($"Erro: Primeira linha deve ser um numero inteiro representando o numero de ações.");
+                input = "1\n" +
+                        $"{input}";
+                linhas = input.Split('\n');
+            }
             for (var i = 1; i < linhas.Length; i++)
             {
                 var splitLine = linhas[i].Split(',');
-                var posição = int.Parse(splitLine[0]) - 1;
-                var ação = int.Parse(splitLine[1]);
-                var valor = double.Parse(splitLine[2], CultureInfo.InvariantCulture);
-                var quantidade = int.Parse(splitLine[3]);
+                if (!int.TryParse(splitLine[0], out var posição) || posição <= 0)
+                {
+                    Console.WriteLine($"Erro: Posição deve ser um número inteiro positivo. (linha {i + 1})");
+                    continue;
+                }
+                else
+                {
+                    posição -= 1;
+                }
+                if (!int.TryParse(splitLine[1], out var ação) || ação < 0 || ação > 2)
+                {
+                    Console.WriteLine($"Erro: Ação deve ser um número inteiro entre 0 e 2. (linha {i + 1})");
+                    continue;
+                }
+                if (!double.TryParse(splitLine[2], NumberStyles.Float, CultureInfo.InvariantCulture, out var valor) || valor < 0)
+                {
+                    Console.WriteLine($"Erro: Valor deve ser um número decimal positivo. (linha {i + 1})");
+                    continue;
+                }
+                if (!int.TryParse(splitLine[3], out var quantidade) || quantidade < 0)
+                {
+                    Console.WriteLine($"Erro: Quantidade deve ser um número inteiro positivo. (linha {i + 1})");
+                    continue;
+                }
 
                 Console.WriteLine($"Pos: {posição + 1}. Ação: {ação}, Valor: {valor.ToString("0.00", CultureInfo.InvariantCulture)}, Quantidade: {quantidade}");
 
@@ -87,9 +115,6 @@ namespace livro_de_ofertas
                         break;
                     case deletar:
                         DeletarOferta(listaOfertas, posição);
-                        break;
-                    default:
-                        Console.WriteLine($"Erro: {ação} não existe.");
                         break;
                 }
             }
@@ -105,7 +130,7 @@ namespace livro_de_ofertas
             }
         }
 
-        static void InserirOferta(List<Dictionary<string, object>> listaOfertas, int posição, double valor, int quantidade)
+        private static void InserirOferta(List<Dictionary<string, object>> listaOfertas, int posição, double valor, int quantidade)
         {
             if (posição <= listaOfertas.Count)
             {
@@ -123,33 +148,34 @@ namespace livro_de_ofertas
             }
         }
 
-        static void ModificarOferta(List<Dictionary<string, object>> listaOfertas, int posição, double valor, int quantidade)
+        private static void ModificarOferta(List<Dictionary<string, object>> listaOfertas, int posição, double valor, int quantidade)
         {
-            if (posição > listaOfertas.Count)
+            if (posição >= listaOfertas.Count)
             {
-                Console.WriteLine($"Erro: modificar em posição {posição} não é válida.");
+                Console.WriteLine($"Erro: modificar em posição {posição} não é válido.");
+                return;
+            }
+            if (valor > 0)
+            {
+                listaOfertas[posição]["valor"] = valor;
+            }
+
+            if (quantidade > 0)
+            {
+                listaOfertas[posição]["quantidade"] = quantidade;
+            }
+        }
+        private static void DeletarOferta(List<Dictionary<string, object>> listaOfertas, int posição)
+        {
+            if (posição >= 0 && posição < listaOfertas.Count)
+            {
+                listaOfertas.RemoveAt(posição);
+                Console.WriteLine("Oferta removida com sucesso.");
             }
             else
             {
-                if (valor > 0)
-                {
-                    listaOfertas[posição]["valor"] = valor;
-                }
-
-                if (quantidade > 0)
-                {
-                    listaOfertas[posição]["quantidade"] = quantidade;
-                }
+                Console.WriteLine("Posição inválida. A oferta não pode ser removida.");
             }
-        }
-
-        static void DeletarOferta(List<Dictionary<string, object>> listaOfertas, int posição)
-        {
-            if (posição > listaOfertas.Count)
-            {
-                Console.WriteLine($"Erro: deletar em posição {posição} não é válida.");
-            }
-            listaOfertas.RemoveAt(posição);
         }
     }
 }
