@@ -83,7 +83,7 @@ static void ModificarOferta(Dictionary<int, (double, int)> listaOfertas, int pos
 
 static void DeletarOferta(Dictionary<int, (double, int)> listaOfertas, int posição)
 {
-    if (posição < listaOfertas.Count)
+    if (posição <= listaOfertas.Count)
     {
         listaOfertas.Remove(posição);
     }
