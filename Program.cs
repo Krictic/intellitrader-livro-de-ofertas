@@ -33,7 +33,7 @@ static void ProcessarOfertas(string input)
         var valor = double.Parse(splitLine[2], CultureInfo.InvariantCulture);
         var quantidade = int.Parse(splitLine[3]);
 
-        Console.WriteLine($"Pos: {posição}. Ação: {ação}, Valor: {valor.ToString("0.0", CultureInfo.InvariantCulture)}, Quantidade: {quantidade}");
+        // Console.WriteLine($"Pos: {posição}. Ação: {ação}, Valor: {valor.ToString("0.0", CultureInfo.InvariantCulture)}, Quantidade: {quantidade}");
 
         switch (ação)
         {
@@ -95,6 +95,6 @@ static void DeletarOferta(Dictionary<int, (double, int)> listaOfertas, int posi�
 
 static void ImprimirOfertas(Dictionary<int, (double, int)> listaOfertas)
 {
-    foreach (var posição in listaOfertas)
-        Console.WriteLine(posição.ToString());
+    foreach (var oferta in listaOfertas)
+        Console.WriteLine($"{oferta.Key},{oferta.Value.Item1.ToString("0.0", CultureInfo.InvariantCulture)},{oferta.Value.Item2}");
 }
