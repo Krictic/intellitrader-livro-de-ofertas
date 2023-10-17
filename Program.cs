@@ -33,7 +33,7 @@ static void processar_ofertas(string input)
         var valor = double.Parse(splitLine[2], CultureInfo.InvariantCulture);
         var quantidade = int.Parse(splitLine[3]);
 
-        Console.WriteLine($"Pos: {posição}. Ação: {ação}, Valor: {valor.ToString("0.0", CultureInfo.InvariantCulture)}, Quantidade: {quantidade}");
+        // Console.WriteLine($"Pos: {posição}. Ação: {ação}, Valor: {valor.ToString("0.0", CultureInfo.InvariantCulture)}, Quantidade: {quantidade}");
 
         if (ação == inserir)
         {
